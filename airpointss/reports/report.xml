@@ -31,7 +31,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                           <t t-foreach="docs" t-as="doc">
+                            <t t-foreach="docs.sorted(key=lambda r: r.date)" t-as="doc">
                                <t t-if="doc.account_id.name != 'Account Receivable'">
                                 <tr>
                                     <td><t t-esc="doc.date"/></td>
@@ -53,7 +53,7 @@
                                </t>
                             </t>
                         </tbody>
-                        <tfoot>
+
                             <tr>
                                 <td colspan="9" style="text-align:center;">TOTAL DEBIT</td>
                                 <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs))" /></td>
@@ -66,7 +66,7 @@
                                     <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs) - sum(line.credit for line in docs))"/></td>
                                 </tr>
                             </tr>
-                        </tfoot>
+
                     </table>
                 </div>
             </t>
