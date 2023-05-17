@@ -16,16 +16,12 @@
                         <thead>
                             <tr>
                                 <th>Date</th>
-<!--                                <th>journal</th>-->
-<!--                                <th>Partner</th>-->
                                 <th>Name</th>
                                 <th>Trip code</th>
                                 <th>Airline</th>
-                                <th>S/N</th>
                                 <th>Route</th>
                                 <th>TKT NO</th>
                                 <th>Reference</th>
-<!--                                <th>cost</th>-->
                                 <th>Debit</th>
                                 <th>Credit</th>
                             </tr>
@@ -35,38 +31,30 @@
                                <t t-if="doc.account_id.name != 'Account Receivable'">
                                 <tr>
                                     <td><t t-esc="doc.date"/></td>
-<!--                                    <td><t t-esc="doc.name"/></td>-->
-<!--                                    <td><t t-esc="doc.partner_id.name"/></td>-->
                                     <td><t t-esc="doc.name_" /></td>
                                     <td><t t-esc="doc.trip_code" /></td>
                                     <td><t t-esc="doc.airline" /></td>
-                                    <td><t t-esc="doc.serial_number" /></td>
                                     <td><t t-esc="doc.route" /></td>
                                     <td><t t-esc="doc.tkt_no" /></td>
                                     <td><t t-esc="doc.reference" /></td>
-<!--                                    <td><t t-esc="doc.cost" /></td>-->
                                     <td><t t-esc="doc.debit" /></td>
                                     <td><t t-esc="doc.credit" /></td>
                                 </tr>
-<!--                                    <t t-set="total_debit" t-value="total_debit + doc.debit"/>-->
-<!--                                    <t t-set="total_credit" t-value="total_credit + doc.credit"/>-->
                                </t>
                             </t>
                         </tbody>
-
                             <tr>
-                                <td colspan="9" style="text-align:center;">TOTAL DEBIT</td>
-                                <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs))" /></td>
+                                <td colspan="8" style="text-align:center;">TOTAL DEBIT</td>
+                                    <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs  if line.account_id.name != 'Account Receivable'))" /></td>
                                 <tr>
-                                    <td colspan="9" style="text-align:center;">TOTAL CREDIT</td>
-                                    <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs))" /></td>
+                                    <td colspan="8" style="text-align:center;">TOTAL CREDIT</td>
+                                    <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable'))" /></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="9" style="text-align:center;">TOTAL REQUIRED:</td>
-                                    <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs) - sum(line.credit for line in docs))"/></td>
+                                    <td colspan="8" style="text-align:center;">TOTAL REQUIRED:</td>
+                                    <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable') - sum(line.debit for line in docs if line.account_id.name != 'Account Receivable'))"/></td>
                                 </tr>
                             </tr>
-
                     </table>
                 </div>
             </t>
@@ -80,8 +68,5 @@
         <field name="report_name">airpointss.journal_items_report_template</field>
         <field name="print_report_name">'Journal Items Report'</field>
         <field name="binding_model_id" ref="account.model_account_move_line"/>
-        <!--        <field name="domain" eval="context.get('domain', [])"/>-->
     </record>
-
-
 </odoo>
