@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Global Solutions JournaL Entry Report",
+    'name': "airpointss",
 
-    'summary': "Global Solutions JournaL Entry Report",
+    'summary': "airpointss",
 
-    'description': "Global Solutions JournaL Entry Report",
+    'description': "airpointss",
 
-    'author': "Saafa  Solutions",
-    'website': "https://Saafan.dev",
+    'author': "Saafan  Solutions",
+    'website': "https://theantmate.com",
 
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml
