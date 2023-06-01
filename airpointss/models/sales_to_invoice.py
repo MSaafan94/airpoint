@@ -1,4 +1,4 @@
-from odoo import fields, models, 
+from odoo import fields, models, api,_
 
 
 class ExtraOrderFields(models.Model):
@@ -32,31 +32,31 @@ class ExtraOrderFields(models.Model):
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    # def action_reverse(self):
-    #     action = super(AccountMove, self).action_reverse()
-    #
-    #     if self.is_invoice():
-    #         action['name'] = _('Credit Note')
-    #
-    #         credit_lines = self.line_ids.filtered(lambda l: l.credit > 0)
-    #         for line in credit_lines:
-    #             origin_line = self.line_ids.filtered(
-    #                 lambda l: l.id == line.move_id.line_ids.filtered(
-    #                     lambda
-    #                         l2: l2.debit > 0 and l2.product_id.id == line.product_id.id and l2.account_id.id == line.account_id.id
-    #                 ).id
-    #             )
-    #             if origin_line:
-    #                 line.name_ = origin_line.name_
-    #                 line.trip_code = origin_line.trip_code
-    #                 line.airline = origin_line.airline
-    #                 line.serial_number = origin_line.serial_number
-    #                 line.route = origin_line.route
-    #                 line.tkt_no = origin_line.tkt_no
-    #                 line.reference = origin_line.reference
-    #                 line.cost = origin_line.cost
-    #
-    #     return action
+    def action_reverse(self):
+        action = super(AccountMove, self).action_reverse()
+
+        if self.is_invoice():
+            action['name'] = _('Credit Note')
+
+            credit_lines = self.line_ids.filtered(lambda l: l.credit > 0)
+            for line in credit_lines:
+                origin_line = self.line_ids.filtered(
+                    lambda l: l.id == line.move_id.line_ids.filtered(
+                        lambda
+                            l2: l2.debit > 0 and l2.product_id.id == line.product_id.id and l2.account_id.id == line.account_id.id
+                    ).id
+                )
+                if origin_line:
+                    line.name_ = origin_line.name_
+                    line.trip_code = origin_line.trip_code
+                    line.airline = origin_line.airline
+                    line.serial_number = origin_line.serial_number
+                    line.route = origin_line.route
+                    line.tkt_no = origin_line.tkt_no
+                    line.reference = origin_line.reference
+                    line.cost = origin_line.cost
+
+        return action
 
 
 class AccountInvoiceLineExtraFields(models.Model):
