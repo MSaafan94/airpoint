@@ -58,6 +58,24 @@ class ExtraOrderFields(models.Model):
         return res
 
 
+class AccountPaymentt(models.Model):
+    _inherit = 'account.payment'
+    name_ = fields.Char(related='ref', string='hee')
+
+    def action_post(self):
+        ''' draft -> posted '''
+        res = super(AccountPaymentt, self).action_post()
+
+        if self.name_:
+            move = self.move_id
+            move_lines = move.line_ids
+            first_line = move_lines.filtered(lambda line: line.account_id != self.destination_account_id)
+            print(self.name_)
+            first_line.update({'name_': self.name_})
+
+        return res
+
+
 class AccountInvoiceLineExtraFields(models.Model):
     _inherit = "account.move.line"
 
