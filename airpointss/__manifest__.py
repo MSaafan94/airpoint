@@ -2,9 +2,9 @@
 {
     'name': "airpointss",
 
-    'summary': "airpointss",
+    'summary': "airpointss latest",
 
-    'description': "airpointss",
+    'description': "airpointss latest",
 
     'author': "Saafan  Solutions",
     'website': "https://theantmate.com",

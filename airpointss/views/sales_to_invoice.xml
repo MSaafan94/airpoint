@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
 
-
-
     <record model="ir.ui.view" id="account_invoice_many_discounts_form_view_inh">
         <field name="name">account.move.many_discounts.form</field>
         <field name="model">account.move</field>
