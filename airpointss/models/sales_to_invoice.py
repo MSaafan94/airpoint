@@ -3,6 +3,55 @@ from odoo import fields, models, api, _
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
+    commission_posted = fields.Boolean(string='Commission Posted', default=False)
+
+    def action_post(self):
+        res = super(AccountMove, self).action_post()
+        journal_id = self.env['account.journal'].search([('name', '=', 'Cash')], limit=1)
+        debit_account_id = self.env['account.account'].search([('name', '=', 'Accounts Receivable')], limit=1)
+        credit_account_id = self.env['account.account'].search([('name', '=', 'Sales Revenue')], limit=1)
+
+        self.env['account.move'].create({
+            'journal_id': journal_id.id,
+            'ref': 'Journal Entry #123',
+            'line_ids': [(0, 0, {
+                'name': 'Debit Line',
+                'account_id': debit_account_id.id,
+                'debit': 100.0,
+                'credit': 0.0,
+            }), (0, 0, {
+                'name': 'Credit Line',
+                'account_id': credit_account_id.id,
+                'debit': 0.0,
+                'credit': 100.0,
+            })],
+        })
+        # if self.move_type == 'out_invoice' and not self.reversed_entry_id and not self.commission_posted:
+        #     print('inside this')
+        #     commission_account_id = self.env['account.account'].search(
+        #         [('name', '=', 'Commission')]).id  # replace with your commission account
+        #     commission_journal_id = self.env['account.journal'].search(
+        #         [('name', '=', 'Commission Journal')]).id  # replace with your commission journal
+        #     commission_amount = self.amount_total * 0.05  # assuming 5% commission
+        #     commission_journal_entry = self.env['account.move'].create({
+        #         'journal_id': commission_journal_id,
+        #         'ref': self.name,
+        #         'move_type': 'entry',
+        #         'date': fields.Date.today(),
+        #     })
+        #     commission_journal_line = {
+        #         'name': 'Commission',
+        #         'account_id': commission_account_id,
+        #         'debit': commission_amount,
+        #         'credit': 0.0,
+        #         'move_id': commission_journal_entry.id,
+        #     }
+        #     self.env['account.move.line'].create(commission_journal_line)
+        #     commission_journal_line['debit'] = 0.0
+        #     commission_journal_line['credit'] = commission_amount
+        #     self.env['account.move.line'].create(commission_journal_line)
+        #     self.write({'commission_posted': True})
+        return res
 
     def action_reverse(self):
         action = super(AccountMove, self).action_reverse()
@@ -87,3 +136,11 @@ class AccountInvoiceLineExtraFields(models.Model):
     tkt_no = fields.Char()
     reference = fields.Char()
     cost = fields.Char()
+
+    def write(self, vals):
+        if 'name_' in vals:
+            # Prevent updating the value of custom_field
+            vals.pop('name_')
+        return super(AccountInvoiceLineExtraFields, self).write(vals)
+
+

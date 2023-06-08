@@ -16,6 +16,17 @@
                 <field name="reference"/>
                 <field name="cost"/>
             </xpath>
+
+            <xpath expr="//field[@name='line_ids']//field[@name='account_id']" position="after">
+                <field name="name_" style="width: 400px;" invisible="1"/>
+                <field name="trip_code" invisible="1" />
+                <field name="airline" invisible="1"/>
+                <field name="serial_number" invisible="1"/>
+                <field name="route" invisible="1"/>
+                <field name="tkt_no" invisible="1"/>
+                <field name="reference" invisible="1"/>
+                <field name="cost" invisible="1"/>
+            </xpath>
         </field>
     </record>
 
