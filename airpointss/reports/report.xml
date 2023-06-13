@@ -6,29 +6,36 @@
                 <t t-set="partner_name" t-value="context.get('partner_name', '')"/>
                 <t t-set="from_date" t-value="context.get('from_date', '')"/>
                 <t t-set="to_date" t-value="context.get('to_date', '')"/>
-                <div class="page">
-                    <h3 style="text-align:center;">Account Invoice Report</h3>
-                     <div style="text-align:center;">
-                        <p>Partner: <t t-esc = "partner_name"/></p>
-                        <p>From: <t t-esc="from_date" />     To:<t t-esc="to_date" /></p>
-                   </div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Name</th>
-                                <th>Trip code</th>
-                                <th>Airline</th>
-                                <th>Route</th>
-                                <th>TKT NO</th>
-                                <th>Reference</th>
-                                <th>Debit</th>
-                                <th>Credit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="docs.sorted(key=lambda r: r.date)" t-as="doc">
-                               <t t-if="doc.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'">
+                <style>
+                    th {
+                        font-size: 14px;
+                    }
+                    td {
+                        font-size: 12px;
+                    }
+                </style>
+                <h3 style="text-align:center;">Account Invoice Report</h3>
+                <div style="text-align:center;">
+                    <p>Partner: <t t-esc="context.get('partner_name', '')"/></p>
+                    <p>From: <t t-esc="context.get('from_date', '')" />     To:<t t-esc="context.get('to_date', '')" /></p>
+                </div>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Name</th>
+                            <th>Trip code</th>
+                            <th>Airline</th>
+                            <th>Route</th>
+                            <th>TKT NO</th>
+                            <th>Reference</th>
+                            <th>Debit</th>
+                            <th>Credit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="docs.sorted(key=lambda r: r.date)" t-as="doc">
+                            <t t-if="doc.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'">
                                 <tr>
                                     <td><t t-esc="doc.date"/></td>
                                     <td><t t-esc="doc.name_" /></td>
@@ -40,23 +47,22 @@
                                     <td><t t-esc="doc.debit" /></td>
                                     <td><t t-esc="doc.credit" /></td>
                                 </tr>
-                               </t>
                             </t>
-                        </tbody>
-                            <tr>
-                                <td colspan="8" style="text-align:center;">TOTAL DEBIT</td>
-                                    <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs  if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
-                                <tr>
-                                    <td colspan="8" style="text-align:center;">TOTAL CREDIT</td>
-                                    <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
-                                </tr>
-                                <tr>
-                                    <td colspan="8" style="text-align:center;">TOTAL REQUIRED:</td>
-                                    <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables') - sum(line.debit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))"/></td>
-                                </tr>
-                            </tr>
-                    </table>
-                </div>
+                        </t>
+                        <tr>
+                            <td colspan="8" style="text-align:center;">TOTAL Debit</td>
+                            <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align:center;">TOTAL Credit</td>
+                            <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="8" style="text-align:center;">TOTAL REQUIRED:</td>
+                            <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables') - sum(line.debit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))"/></td>
+                        </tr>
+                    </tbody>
+                </table>
             </t>
         </t>
     </template>
