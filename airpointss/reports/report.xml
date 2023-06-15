@@ -51,11 +51,11 @@
                         </t>
                         <tr>
                             <td colspan="8" style="text-align:center;">TOTAL DEBIT</td>
-                            <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
+                            <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
                         </tr>
                         <tr>
                             <td colspan="8" style="text-align:center;">TOTAL CREDIT</td>
-                            <td><t t-esc="'{:,.2f}'.format(sum(line.credit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
+                            <td><t t-esc="'{:,.2f}'.format(sum(line.debit for line in docs if line.account_id.name != 'Account Receivable' and doc.account_id.name != 'Payables'))" /></td>
                         </tr>
                         <tr>
                             <td colspan="8" style="text-align:center;">TOTAL REQUIRED:</td>
