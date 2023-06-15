@@ -25,5 +25,6 @@
         'views/sales_to_invoice.xml',
         'reports/report.xml',
         'security/ir.model.access.csv',
+        'views/sale_order_line_search_view.xml'
     ],
 }

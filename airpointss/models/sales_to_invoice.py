@@ -1,6 +1,63 @@
 from odoo import fields, models, api, _
 
 
+class SaleOrderLineSearch(models.Model):
+    _inherit = 'sale.order'
+
+    order_line_name = fields.Char(
+        string='Order Line Name',
+        compute='_compute_order_line_name',
+        search='_search_order_line_name',
+    )
+
+    @api.depends('order_line')
+    def _compute_order_line_name(self):
+        for record in self:
+            record.order_line_name = ', '.join(record.mapped('order_line.name_'))
+
+    def _search_order_line_name(self, operator, value):
+        order_lines = self.env['sale.order.line'].search([('name_', operator, value)])
+        order_ids = order_lines.mapped('order_id').ids
+        return [('id', 'in', order_ids)]
+
+    @api.depends('order_line')
+    def _compute_order_line_name(self):
+        for record in self:
+            record.order_line_name = ', '.join(record.mapped('order_line.tkt_no'))
+
+    order_line_tkt_no = fields.Char(
+        string='Order Line Ticket No',
+        compute='_compute_order_line_tkt_no',
+        search='_search_order_line_tkt_no',
+    )
+
+    @api.depends('order_line')
+    def _compute_order_line_tkt_no(self):
+        for record in self:
+            record.order_line_tkt_no = ', '.join(record.mapped('order_line.tkt_no'))
+
+    def _search_order_line_tkt_no(self, operator, value):
+        order_lines = self.env['sale.order.line'].search([('tkt_no', operator, value)])
+        order_ids = order_lines.mapped('order_id').ids
+        return [('id', 'in', order_ids)]
+
+    order_line_reference = fields.Char(
+        string='Order Line reference',
+        compute='_compute_order_line_reference',
+        search='_search_order_line_reference',
+    )
+
+    @api.depends('order_line')
+    def _compute_order_line_reference(self):
+        for record in self:
+            record.order_line_reference = ', '.join(record.mapped('order_line.reference'))
+
+    def _search_order_line_reference(self, operator, value):
+        order_lines = self.env['sale.order.line'].search([('reference', operator, value)])
+        order_ids = order_lines.mapped('order_id').ids
+        return [('id', 'in', order_ids)]
+
+
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
@@ -59,9 +116,23 @@ class ExtraOrderFields(models.Model):
         return res
 
 
-class AccountPaymentt_(models.Model):
+class AccountPaymentt(models.Model):
     _inherit = 'account.payment'
     name_ = fields.Char(related='ref', string='hee')
+
+    def action_post(self):
+        ''' draft -> posted '''
+        res = super(AccountPaymentt, self).action_post()
+
+        if self.name_:
+            move = self.move_id
+            move_lines = move.line_ids
+
+            # Update the custom 'name_' field for all journal items in the move
+            for line in move_lines:
+                line.update({'name_': self.name_})
+
+        return res
 
 
 class AccountInvoiceLineExtraFields(models.Model):
